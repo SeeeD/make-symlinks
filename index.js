@@ -17,9 +17,9 @@ function abortIfFileExists(fp) {
 	}
 }
 
-module.exports = function (patterns, destPath, opts) {
+module.exports = function (patterns, destPath, destFilename, opts) {
 	opts = opts || {};
-	opts.force = opts.force || false;
+	opts.force = opts.force || true;
 	opts.dryRun = opts.dryRun || false;
 
 	destPath = path.resolve('', destPath);
@@ -41,6 +41,9 @@ module.exports = function (patterns, destPath, opts) {
 		return Promise.all(paths.map(function (targetPath) {
 			var target = path.resolve(opts.cwd || '', targetPath);
 			var dest = path.join(destPath, path.basename(targetPath));
+			if (!!destFilename) {
+				dest = path.join(destPath, destFilename);
+			}
 
 			if (!strategy.del.force) {
 				abortIfFileExists(dest);
@@ -64,9 +67,9 @@ module.exports = function (patterns, destPath, opts) {
 	});
 };
 
-module.exports.sync = function (patterns, destPath, opts) {
+module.exports.sync = function (patterns, destPath, destFilename, opts) {
 	opts = opts || {};
-	opts.force = opts.force || false;
+	opts.force = opts.force || true;
 	opts.dryRun = opts.dryRun || false;
 
 	destPath = path.resolve('', destPath);
@@ -86,6 +89,9 @@ module.exports.sync = function (patterns, destPath, opts) {
 	return globby.sync(patterns, opts).map(function (targetPath) {
 		var target = path.resolve(opts.cwd || '', targetPath);
 		var dest = path.join(destPath, path.basename(targetPath));
+		if (!!destFilename) {
+			dest = path.join(destPath, destFilename);
+		}
 
 		if (!strategy.del.force) {
 			abortIfFileExists(dest);

@@ -17,12 +17,13 @@ function abortIfFileExists(fp) {
 	}
 }
 
-module.exports = function (patterns, destPath, destFilename, opts) {
-	opts = opts || {};
+module.exports = function (patterns, destPath, destFilename, sourceFilename) {
+	var opts = {};
 	opts.force = opts.force || true;
 	opts.dryRun = opts.dryRun || false;
 
 	destPath = path.resolve('', destPath);
+	patterns = path.join(patterns, sourceFilename);
 
 	if (!fs.existsSync(destPath)) {
 		throw new Error('Path ' + destPath + ' doesn\'t exists');
@@ -67,12 +68,13 @@ module.exports = function (patterns, destPath, destFilename, opts) {
 	});
 };
 
-module.exports.sync = function (patterns, destPath, destFilename, opts) {
-	opts = opts || {};
+module.exports.sync = function (patterns, destPath, destFilename, sourceFilename) {
+	var opts = {};
 	opts.force = opts.force || true;
 	opts.dryRun = opts.dryRun || false;
 
 	destPath = path.resolve('', destPath);
+	patterns = path.join(patterns, sourceFilename);
 
 	if (!fs.existsSync(destPath)) {
 		throw new Error('Path ' + destPath + ' doesn\'t exist');
